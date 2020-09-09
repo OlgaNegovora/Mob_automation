@@ -5,9 +5,10 @@ public class MainClassTest
 {
     MainClass Math=new MainClass();
     @Test
-    public void testGetClassNumber()
+    public void testGetClassString()
     {
-        int actual = Math.getClassNumber();
-        Assert.assertTrue("getClassNumber returned <=45, getClassNumber = "+ actual ,actual>45) ;
+     String x = Math.getClassString();
+     int actual=x.toLowerCase().indexOf("hello");
+     Assert.assertTrue("In getClassString no substring Hello or hello ",actual>=0) ;
     }
 }
