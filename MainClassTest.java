@@ -1,13 +1,13 @@
 import org.junit.Assert;
 import org.junit.Test;
 
-public class MainClassTest extends MainClass
+public class MainClassTest
 {
+    MainClass Math=new MainClass();
     @Test
-    public void testGetLocalNumber()
+    public void testGetClassNumber()
     {
-        int actual = this.getLocalNumber();
-        int expected=14;
-        Assert.assertEquals("Returned not 14 ",expected,actual);
+        int actual = Math.getClassNumber();
+        Assert.assertTrue("getClassNumber returned <=45, getClassNumber = "+ actual ,actual>45) ;
     }
 }
