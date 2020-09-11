@@ -8,7 +8,8 @@ public class MainClassTest
     public void testGetClassString()
     {
      String x = Math.getClassString();
-     int actual=x.toLowerCase().indexOf("hello");
-     Assert.assertTrue("In getClassString no substring Hello or hello ",actual>=0) ;
+     int actualx=x.indexOf("Hello");
+     int actualy=x.indexOf("hello");
+     Assert.assertTrue("In getClassString no substring Hello or hello ",((actualx>=0) || (actualy>=0)));
     }
 }
