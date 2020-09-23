@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -35,13 +36,37 @@ public class FirstTest {
     }
 
     @Test
-    public void testEx2()
+    public void sizeSearchListCancel()
     {
-        assertElementHasText(
-                        By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                        "Search Wikipedia",
-                        "Cannot find the text field 'Search Wikipedia'",
-                        5
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container") ,
+                "Cannot find 'Search Wikipedia' input",
+                5
+        ) ;
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "JavaScript",
+                "Cannot find search input",
+                5
+        );
+
+        int testSize= sizeListForElementFind(
+        By.id("org.wikipedia:id/page_list_item_container"));
+        //System.out.println(testSize);
+        Assert.assertTrue("Search result less than or equal to 1", testSize >1);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find X to cancel search",
+                5
+
+        ) ;
+
+        waitForElementNotPresent(
+                By.id("org.wikipedia:id/page_list_item_container"),
+                "List is still present on the page",
+                5
         );
     }
 
@@ -54,11 +79,39 @@ public class FirstTest {
         );
     }
 
-    public void assertElementHasText(By by, String text, String error_message, long timeoutInSeconds)
 
-        {
-            WebElement element = waitForElementPresent(by,error_message, timeoutInSeconds);
-            String actual=element.getAttribute("text");
-            Assert.assertEquals(error_message, text, actual);
-        }
+    private WebElement waitForElementPresent(By by, String error_message)
+    {
+        return waitForElementPresent(by, error_message,5);
+    }
+
+    private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds)
+    {
+        WebElement element = waitForElementPresent(by,error_message,5);
+        element.click();
+        return element;
+    }
+
+    private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds)
+    {
+        WebElement element = waitForElementPresent(by ,error_message,5);
+        element.sendKeys(value);
+        return element;
+    }
+
+    private boolean waitForElementNotPresent(By by,String error_message, long timeoutInSecond)
+    {
+        WebDriverWait wait = new WebDriverWait(driver,timeoutInSecond);
+        wait.withMessage(error_message + "\n");
+        return wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(by)
+        );
+    }
+
+    private int sizeListForElementFind(By by)
+    {
+        List <WebElement> testElement = driver.findElements(by) ;
+        return testElement.size();
+    }
+
 }
