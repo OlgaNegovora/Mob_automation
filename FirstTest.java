@@ -29,6 +29,7 @@ public class FirstTest {
         capabilities.setCapability("appPackage","org.wikipedia");
         capabilities.setCapability("appActivity",".main.MainActivity");
         capabilities.setCapability("app","/Users/apple/Desktop/JavaAppiumAutomation/apks/org.wikipedia.apk");
+        capabilities.setCapability("orientation","PORTRAIT");
 
         driver=new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"),capabilities);
     }
@@ -39,7 +40,30 @@ public class FirstTest {
     }
 
     @Test
-    public void testOpenArticleFindTitle()//работает
+    public void firstTest() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                10
+        );
+
+        driver.rotate(ScreenOrientation.LANDSCAPE);
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']") ,
+                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
+                15
+        );
+    }
+
+    @Test
+    public void testChangeScreenOrientationOnSearchResults()
     {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -54,28 +78,33 @@ public class FirstTest {
                 "Cannot find search input",
                 5
         );
+
         waitForElementAndClick(
                 By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']") ,
-                "Cannot find 'Search Wikipedia' input",
-                5
+                "Cannot find 'Object-oriented programming language' topic searching by "+search_line,
+                15
         );
 
-
-        String article_title_locator="org.wikipedia:id/view_page_title_text";
-        //Не дожидаться появления title
-       /* waitForElementPresent(
-                By.id(article_title_locator),
-                "test",
-                5
-        );*/
-
-        assertElementPresent(
-                By.id(article_title_locator),
-                "We not found some results by request "+search_line
+        String title_before_rotation=waitForElementAndGetAttribute(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "text",
+                "Cannot find title of article",
+                15
         );
+        driver.rotate(ScreenOrientation.LANDSCAPE);
+        String title_after_rotation=waitForElementAndGetAttribute(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "text",
+                "Cannot find title of article",
+                15
+        );
+
+        Assert.assertEquals(
+                "Article title have been change after screen rotation",
+                title_before_rotation,
+                title_after_rotation
+        ) ;
     }
-
-
 
     private WebElement waitForElementPresent(By by, String error_message,long timeoutInSeconds)
     {
@@ -105,20 +134,9 @@ public class FirstTest {
         return element;
     }
 
-    private int getAmountOfElements(By by)
+    private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds)
     {
-        List elements=driver.findElements(by);
-        return elements.size();
+        WebElement element= waitForElementPresent(by, error_message, timeoutInSeconds);
+        return element.getAttribute(attribute);
     }
-
-    private void assertElementPresent(By by,String error_message)
-    {
-        int amount_of_elements=getAmountOfElements(by);
-       // System.out.println(amount_of_elements);
-        if (amount_of_elements ==0){
-            String default_message="An element '"+ by.toString() +"' not present";
-            throw new AssertionError(default_message +" "+ error_message);
-        }
-    }
-
 }
