@@ -3,17 +3,19 @@ package lib.ui;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 
-public class SearchPageObject extends MainPageObject //методы для поиска
+abstract public class SearchPageObject extends MainPageObject //методы для поиска
    {
-       private static final String
-       SEARCH_INIT_ELEMENT="xpath://*[contains(@text,'Search Wikipedia')]",
-       SEARCH_INPUT="xpath://*[contains(@text,'Search…')]",
-       SEARCH_CANCEL_BUTTON="id:org.wikipedia:id/search_close_btn",
-       SEARCH_RESULT_BY_SUBSTRING_TPL ="xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
-       SEARCH_RESULT_ELEMENT="xpath://*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
-       SEARCH_EMPTY_RESULT_ELEMENT="xpath://*[@text='No results found']",
-       SEARCH_RESULT_BY_SUBSTRING_TITLE_DESCRIPTION_TPL ="xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{DESCRIPTION}'][@resource-id='org.wikipedia:id/page_list_item_description']/..//*[@text='{TITLE}'][@resource-id='org.wikipedia:id/page_list_item_title']",
-       SEARCH_RESULT="id:org.wikipedia:id/page_list_item_container";
+      protected  static String
+       SEARCH_INIT_ELEMENT,
+       SEARCH_INPUT,
+       SEARCH_CANCEL_BUTTON,
+       SEARCH_RESULT_BY_SUBSTRING_TPL,
+       SEARCH_RESULT_ELEMENT,
+       SEARCH_EMPTY_RESULT_ELEMENT,
+       SEARCH_RESULT_BY_SUBSTRING_TITLE_DESCRIPTION_TPL ,
+       SEARCH_RESULT,
+       SKIP,
+      CLEAR_MINI;
 
        public SearchPageObject(AppiumDriver driver)
        {
@@ -36,8 +38,8 @@ public class SearchPageObject extends MainPageObject //методы для по�
 
        public void initSearchInput()
        {
-           this.waitForElementAndClick(SEARCH_INIT_ELEMENT, "Cannot find and click search init element",4) ;
-           this.waitForElementPresent(SEARCH_INIT_ELEMENT,"Cannot find search input after clicking search init element");
+           this. waitForElementAndClick(SEARCH_INIT_ELEMENT, "Cannot find and click search init element",10) ;
+           this.waitForElementPresent(SEARCH_INPUT,"Cannot find search input after clicking search init element");
        }
 
        public void waitForCancelButtonToAppear()
@@ -53,6 +55,10 @@ public class SearchPageObject extends MainPageObject //методы для по�
        public void clickCancelSearch()
        {
            this.waitForElementAndClick(SEARCH_CANCEL_BUTTON, "Cannot find and click search cancel button.", 5);
+       }
+       public void clickClearSearch()
+       {
+           this.waitForElementAndClick(CLEAR_MINI, "Cannot find and click search clear button.", 5);
        }
 
        public void typeSearchLine(String search_line)
@@ -73,10 +79,7 @@ public class SearchPageObject extends MainPageObject //методы для по�
        }
 
        public int getAmountOfFoundArticles()
-
        {
-          //String search_result_locator="//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Linkin Park discography']";
-           //System.out.println(search_result_locator);
            this.waitForElementPresent(
                    SEARCH_RESULT_ELEMENT ,
                    "Cannot find anything by the request ",
@@ -99,7 +102,6 @@ public class SearchPageObject extends MainPageObject //методы для по�
        public void waitForElementByTitleAndDescription(String title, String description)
        {
            String search_result_xpath=getResultSearchElementSubstringByTitleAndDescription(title, description);
-           //System.out.println(search_result_xpath);
            this.waitForElementPresent(search_result_xpath,"Cannot find search result with title '"+title+"' and description '"+description+"'");
        }
 
@@ -113,7 +115,6 @@ public class SearchPageObject extends MainPageObject //методы для по�
        {
            this.waitForElementNotPresent(SEARCH_RESULT,"Search lists is still present!",15);
        }
-
 
 
    }
