@@ -55,7 +55,7 @@ public class SearchTests extends CoreTestCase
         SearchPageObject.waitForEmptyForResultsLabel();
         SearchPageObject.assertThereIsNoResultOfSearch();
     }
-
+//Ex9
     @Test
     public void testSearchFirstThree()
     {

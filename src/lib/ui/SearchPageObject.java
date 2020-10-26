@@ -30,6 +30,7 @@ abstract public class SearchPageObject extends MainPageObject //методы д�
 
        private static String getResultSearchElementSubstringByTitleAndDescription(String title, String description)
        {
+
            return SEARCH_RESULT_BY_SUBSTRING_TITLE_DESCRIPTION_TPL.replace ("{TITLE}",title).replace("{DESCRIPTION}",description) ;
 
        }
